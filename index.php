@@ -5,9 +5,11 @@
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <title>Jam. Сайт визитка</title><!-- Bootstrap -->
+    <title>Jam</title>
+    <meta name="keywords" content="Jam, сайт-визитка, заказать сайт визитку, визитка, качество, быстро, джем, rajam, риа джем, не дорого, бесплатная консультация">
+    <meta name="description" content="Создание сайта визитки. Мариуполь, Киев, Донецк.">
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style.min.css" rel="stylesheet">
     <link href="favicon.jpg" rel="icon" type="image/jpeg">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -60,16 +62,19 @@ if (isset($_POST["submit"]))
         $email=new TEmail;
         $email->from_email='webmaster@rajam.com.ua';
         $email->from_name="Jam Vizitka";
-        $email->to_email='lenchvov@rambler.ru';
+        $email->to_email='pruv@rarus.kiev.ua';
         $email->to_name='Jam';
         $email->subject='Клиент';
         $email->body="Клиент ".$_POST["name"]."\r\nEmail: ".$_POST["email"]."\r\nТелефон: ".$_POST["phone"]."\r\n";
+        
         if ($email->send())
         {
             header("Location: http://".$_SERVER["SERVER_NAME"]."/?ver=OK");
         } else {
             output_err(3);
+            $email->body = "error send:\t".$email->body;
         }
+        file_put_contents("../../logs/vizitka_users_log.txt", "\n".date("m.d.y H:i:s")."\n".$email->body."\n".str_repeat("-", 40)."\n", FILE_APPEND | LOCK_EX);
     }
 }  
 else if (isset($_POST["submit-to-designer"]))
@@ -95,7 +100,7 @@ else if (isset($_POST["submit-to-designer"]))
         $email=new TEmail;
         $email->from_email='webmaster@rajam.com.ua';
         $email->from_name="Jam Vizitka";
-        $email->to_email='lenchvov@rambler.ru';
+        $email->to_email='pruv@rarus.kiev.ua';
         $email->to_name='Jam';
         $email->subject='Клиент желающий бесплатных консультаций';
         $email->body="Email: ".$_POST["email"]."\r\nСообщение: ".$_POST["message"]."\r\n";
@@ -104,7 +109,9 @@ else if (isset($_POST["submit-to-designer"]))
             header("Location: http://".$_SERVER["SERVER_NAME"]."/?ver=OK");
         } else {
             output_err(3);
+            $email->body = "error send:\t".$email->body;
         }
+        file_put_contents("../../logs/vizitka_users_log.txt", "\n".date("m.d.y H:i:s")." to designer\n".$email->body."\n".str_repeat("-", 40)."\n", FILE_APPEND | LOCK_EX);
     }
 
 } else if (isset($_GET["ver"]) && $_GET["ver"] == "OK") 
@@ -128,7 +135,7 @@ else if (isset($_POST["submit-to-designer"]))
         </div>
     </div>
     <header class="header">
-        <a href="http://rajam.com.ua" class="logo"><div class="logo-sign"><b>Рекламно-творческая лаборатория</b></div></a>
+        <a href="http://rajam.com.ua" class="logo"><!--div class="logo-sign"><b>Рекламно-творческая лаборатория</b></div--></a>
          <div class="center-wrapper"><div class="header-sign"><b>Разработка сайтов любого уровня сложности</b></div></div>
         <div class="right-panel">
             <div class="phone">
@@ -365,29 +372,70 @@ else if (isset($_POST["submit-to-designer"]))
     <footer class="footer">
         <div class="wrapper">
             <div class="left-content">
-                <b>pruv@rarus.kiev.ua</b><br />
+                <b>design@rajam.com.ua</b><br />
                 +38 (050) 253-91-71<br />
                 +38 (050) 195-83-55<br />
+                +38 (093) 708-00-13<br />
                 (на связи с 10.00 до 17.00)<br />
-                <ul class="social-list">
+                <!--ul class="social-list">
                     <li>
                         <a class="vk" href="https://vk.com/id254863592" target="_blank"></a>
                     </li>
                     <li>
                         <a class="fb" href="https://www.facebook.com/rajam.com.ua/?pnref=lhc" target="_blank"></a>
                     </li>
-                </ul>
+                </ul-->
             </div>
             <div class="right-content">
                 <h3 class="footer-title">РЕКЛАМНО-ТВОРЧЕСКАЯ ЛАБОРАТОРИЯ</h3>
-                <span class="some-text">Разработка сайтов любого уровня сложности<span>
+                <span class="some-text">Разработка сайтов любого уровня сложности</span>
             </div>
         </div>
+ <!-- Yandex.Metrika informer -->
+ <div class="yandex-block">
+    <a href="https://metrika.yandex.ru/stat/?id=34087105&amp;from=informer"
+target="_blank" rel="nofollow"><img src="//informer.yandex.ru/informer/34087105/3_1_FFFFFFFF_EFEFEFFF_0_pageviews"
+style="width:88px; height:31px; border:0;" alt="Яндекс.Метрика" title="Яндекс.Метрика: данные за сегодня (просмотры, визиты и уникальные посетители)" onclick="try{Ya.Metrika.informer({i:this,id:34087105,lang:'ru'});return false}catch(e){}"/></a>
+</div>
+<!-- /Yandex.Metrika informer -->
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter34087105 = new Ya.Metrika({id:34087105,
+                    webvisor:true,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true});
+        } catch(e) { }
+    });
+
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/34087105" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
     </footer>
     <script src=
     "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
     </script> 
     <script src="js/script.js">
     </script>
+    <!-- BEGIN JIVOSITE CODE {literal} -->
+    <script type='text/javascript'>
+    (function(){ var widget_id = 'nnRL7vdC4F';
+    var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);})();</script>
+    <!-- {/literal} END JIVOSITE CODE -->
 </body>
 </html>

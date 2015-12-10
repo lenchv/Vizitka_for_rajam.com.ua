@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /Webstat
+Disallow: /PHPClasses
+Disallow: /fonts
+Disallow: /js
+Disallow: /index1.html
