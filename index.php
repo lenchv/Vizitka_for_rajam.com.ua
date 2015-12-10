@@ -7,7 +7,7 @@
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <title>Jam. Сайт визитка</title><!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/style.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
     <link href="favicon.jpg" rel="icon" type="image/jpeg">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -17,6 +17,101 @@
     <![endif]-->
 </head>
 <body>
+<?
+require_once("PHPClasses/TEmail.php");
+function output_err($err) {
+    $ERROR[0] = "Введите имя!";
+    $ERROR[1] = "Неверное указан email!";
+    $ERROR[2] = "Неверно указан телефон!";
+    $ERROR[3] = "Заявка не отправлена, попробуйте, пожалуйста, еще раз!";
+    $ERROR[4] = "Введите сообщение дизайнеру!";
+
+    echo "<div class='message'>".$ERROR[$err]."</div>";
+}
+if (isset($_POST["submit"])) 
+{
+    /**
+    *   Заявка на сайт
+    */
+    $_POST['email'] =  substr(htmlspecialchars(trim($_POST['email'])), 0, 50);
+    $_POST['name'] =  substr(htmlspecialchars(trim($_POST['name'])), 0, 30); 
+    $_POST['phone'] =  substr(htmlspecialchars(trim($_POST['phone'])), 0, 30); 
+    $error = false;
+    // если не заполнено поле "Имя" - показываем ошибку 0 
+    if (empty($_POST['name'])) 
+    {
+        $error = true; 
+        output_err(0); 
+    }  
+    // если неправильно заполнено поле email - показываем ошибку 1 
+    if(!preg_match("/[0-9a-z_]+@[0-9a-z_^\.]+\.[a-z]{2,3}/i", $_POST['email']))
+    {
+        $error = true; 
+        output_err(1); 
+    }  
+  // если не заполнено поле "Телефон" - показываем ошибку 2 
+    if(empty($_POST['phone'])) 
+    {
+        $error = true; 
+        output_err(2); 
+    }  
+    if (!$error)
+    {        
+        $email=new TEmail;
+        $email->from_email='webmaster@rajam.com.ua';
+        $email->from_name="Jam Vizitka";
+        $email->to_email='lenchvov@rambler.ru';
+        $email->to_name='Jam';
+        $email->subject='Клиент';
+        $email->body="Клиент ".$_POST["name"]."\r\nEmail: ".$_POST["email"]."\r\nТелефон: ".$_POST["phone"]."\r\n";
+        if ($email->send())
+        {
+            header("Location: http://".$_SERVER["SERVER_NAME"]."/?ver=OK");
+        } else {
+            output_err(3);
+        }
+    }
+}  
+else if (isset($_POST["submit-to-designer"]))
+{
+    /**
+    *   Сообщение дизайнеру
+    */
+    $error = false;
+    $_POST['email'] =  substr(htmlspecialchars(trim($_POST['email'])), 0, 50);
+    $_POST['message'] =  substr(htmlspecialchars(trim($_POST['message'])), 0, 10000);
+    if(!preg_match("/[0-9a-z_]+@[0-9a-z_^\.]+\.[a-z]{2,3}/i", $_POST['email']))
+    {
+        $error = true; 
+        output_err(1); 
+    } 
+    if(empty($_POST['message'])) 
+    {
+        $error = true; 
+        output_err(4); 
+    }
+    if (!$error)
+    {        
+        $email=new TEmail;
+        $email->from_email='webmaster@rajam.com.ua';
+        $email->from_name="Jam Vizitka";
+        $email->to_email='lenchvov@rambler.ru';
+        $email->to_name='Jam';
+        $email->subject='Клиент желающий бесплатных консультаций';
+        $email->body="Email: ".$_POST["email"]."\r\nСообщение: ".$_POST["message"]."\r\n";
+        if ($email->send())
+        {
+            header("Location: http://".$_SERVER["SERVER_NAME"]."/?ver=OK");
+        } else {
+            output_err(3);
+        }
+    }
+
+} else if (isset($_GET["ver"]) && $_GET["ver"] == "OK") 
+{
+    echo "<div class='message success'>Ваша заявка успешно принята!</div>";
+}
+?>
     <div class="modal-wrapper">
         <div class="modal-window">
             <div class="title-window">
@@ -28,12 +123,13 @@
                 вопрос дизайнеру:</label> 
                 <textarea cols="60" id="message" name="message" required=""
                 rows="5">
-</textarea> <input name="submit" type="submit" value="ОТПРАВИТЬ">
+</textarea> <input name="submit-to-designer" type="submit" value="ОТПРАВИТЬ">
                 </form>
         </div>
     </div>
     <header class="header">
-        <div class="logo"></div>
+        <a href="http://rajam.com.ua" class="logo"><div class="logo-sign"><b>Рекламно-творческая лаборатория</b></div></a>
+         <div class="center-wrapper"><div class="header-sign"><b>Разработка сайтов любого уровня сложности</b></div></div>
         <div class="right-panel">
             <div class="phone">
                 <div class="logo-phone"></div>
@@ -43,25 +139,29 @@
                 </div>
             </div>
         </div>
-        <div class="center-wrapper"></div>
+       <div class="border"></div>
     </header>
     <div class="clearfix"></div>
     <div class="page-first">
-        <ul class="list-advantages">
+        <div class="advantages"><b>минимум затрат - максимум прибыли</b></div>
+        <!--ul class="list-advantages">
             <li><b>быстрый</b></li>
             <li><b>недорогой</b></li>
             <li><b>стабильный</b></li>
-        </ul>
+        </ul-->
         <h1 class="title"><strong>САЙТ-ВИЗИТКА</strong></h1>
         <div class="under-title">
             ВАШЕ ПРЕДСТАВИТЕЛЬСТВО В СЕТИ ИНТЕРНЕТ
         </div>
         <div class="container">
             <ul class="list-offers">
-                <li>Отрисовка дизайна за неделю</li>
+                <!--li>Отрисовка дизайна за неделю</li>
                 <li>Стабильная работа сайта на платформе 1С Битрикс</li>
                 <li>Простое управление сайтом</li>
-                <li>Поддержка после создания</li>
+                <li>Поддержка после создания</li-->
+                <li>Стабильная работа сайта на платформе 1С Битрикс</li>
+                <li>Практичный и понятный интерфейс управления</li>
+                <li>Возможность последующего развития сайта до Корп.портала и Интернет-магазина</li>
             </ul>
             <form class="form-request" method="post">
                 <div class="before-date">
@@ -78,6 +178,8 @@
                 type="text"><br>
                 <input name="phone" placeholder="Ваш номер телефона" type=
                 "text"><br>
+                <input name="email" placeholder="Ваш email" type=
+                "email"><br>
                 <input name="submit" type="submit" value="ХОЧУ САЙТ-ВИЗИТКУ!">
             </form>
         </div>
@@ -187,7 +289,7 @@
                     поэтому не будет лишним
                 </div>
                 <div class="btn-designer-consult">
-                    ПРОКОНСЛУЬТИРОВАТЬСЯ С ДИЗАЙНЕРОМ
+                    ПРОКОНСУЛЬТИРОВАТЬСЯ С ДИЗАЙНЕРОМ
                 </div>
                 <div class="free-sign">
                     Бесплатно до 15 декабря
@@ -249,16 +351,39 @@
                 type="text"><br>
                 <input name="phone" placeholder="Ваш номер телефона" type=
                 "text"><br>
+                <input name="email" placeholder="Ваш email" type=
+                "email"><br>
                 <input name="submit" type="submit" value="ХОЧУ САЙТ-ВИЗИТКУ!">
             </form>
             <ul class="list-offers">
-                <li>Отрисовка дизайна за неделю</li>
                 <li>Стабильная работа сайта на платформе 1С Битрикс</li>
-                <li>Простое управление сайтом</li>
-                <li>Поддержка сайта после создания</li>
+                <li>Практичный и понятный интерфейс управления</li>
+                <li>Возможность последующего развития сайта до Корп.портала и Интернет-магазина</li>
             </ul>
         </div>
     </div>
+    <footer class="footer">
+        <div class="wrapper">
+            <div class="left-content">
+                <b>pruv@rarus.kiev.ua</b><br />
+                +38 (050) 253-91-71<br />
+                +38 (050) 195-83-55<br />
+                (на связи с 10.00 до 17.00)<br />
+                <ul class="social-list">
+                    <li>
+                        <a class="vk" href="https://vk.com/id254863592" target="_blank"></a>
+                    </li>
+                    <li>
+                        <a class="fb" href="https://www.facebook.com/rajam.com.ua/?pnref=lhc" target="_blank"></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="right-content">
+                <h3 class="footer-title">РЕКЛАМНО-ТВОРЧЕСКАЯ ЛАБОРАТОРИЯ</h3>
+                <span class="some-text">Разработка сайтов любого уровня сложности<span>
+            </div>
+        </div>
+    </footer>
     <script src=
     "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
     </script> 

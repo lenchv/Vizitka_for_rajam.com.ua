@@ -18,4 +18,17 @@ $(function() {
 	$(".btn-designer-consult").on("click", function (e) {
 		$(".modal-wrapper").addClass("active");
 	});
+	//если есть сообщения об ошибках то удалить их
+	var messages = document.querySelectorAll('.message');
+    if (messages.length != 0) {
+    	var time = 0;
+	    for (var i = messages.length-1; i >= 0; i--) {
+	        setTimeout( (function (that) {
+	        	return function () {
+	        		that.classList.add('notactive')
+	        	};
+	        })(messages[i]), 100+time);
+	        time += 1000;
+	    }
+	}
 });

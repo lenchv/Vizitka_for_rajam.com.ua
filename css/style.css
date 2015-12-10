@@ -2344,3 +2344,29 @@ html,body {
     }
 }
 /**************************************************/
+
+.message.notactive {
+    top: -200px;
+}
+.message {
+    width: 500px;
+    height: 50px;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    margin-left: -250px;
+
+    line-height: 50px;
+    text-align: center;
+    color: #333;
+    font-weight: bold;
+    background-color: rgba(232, 98, 78, .9);
+
+    -webkit-transition: top 1s ease-out 2s;
+    -o-transition: top 1s ease-out 2s;
+    transition: top 1s ease-out 2s;
+}
+
+.message.success {
+    background-color: rgba(98, 232, 78, .9);
+}
